@@ -1,15 +1,8 @@
 {
-  "program": "Back Office Medical Assistant",
-  "savedAt": "2026-07-28T21:00:48.969Z",
+  "program": "Front Back Office Medical Assistant",
+  "date": "2026-07-28",
+  "savedAt": "2026-07-28T21:05:04.079Z",
   "classes": [
-    {
-      "name": "MA Theory",
-      "credits": 4,
-      "hours": 120,
-      "hoursManual": false,
-      "startWeek": 1,
-      "duration": 15
-    },
     {
       "name": "Computer & Internet Fundamentals",
       "credits": 1,
@@ -35,6 +28,14 @@
       "duration": 30
     },
     {
+      "name": "MA Theory",
+      "credits": 4,
+      "hours": 120,
+      "hoursManual": false,
+      "startWeek": 1,
+      "duration": 15
+    },
+    {
       "name": "MA Skills 1",
       "credits": 2,
       "hours": 60,
@@ -44,22 +45,14 @@
     },
     {
       "name": "Microsoft Office Suite",
-      "credits": 1,
-      "hours": 30,
+      "credits": 2,
+      "hours": 60,
       "hoursManual": false,
       "startWeek": 5,
-      "duration": 4
+      "duration": 8
     },
     {
-      "name": "Medical Filing Fundamentals",
-      "credits": 1,
-      "hours": 30,
-      "hoursManual": false,
-      "startWeek": 9,
-      "duration": 4
-    },
-    {
-      "name": "HIPAA / EMR Lab",
+      "name": "Business English",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
@@ -91,12 +84,52 @@
       "duration": 15
     },
     {
+      "name": "CIMO",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 18,
+      "duration": 8
+    },
+    {
       "name": "Venipuncture",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
-      "startWeek": 18,
-      "duration": 13
+      "startWeek": 19,
+      "duration": 12
+    },
+    {
+      "name": "Capstone Projects",
+      "credits": 3,
+      "hours": 90,
+      "hoursManual": false,
+      "startWeek": 25,
+      "duration": 21
+    },
+    {
+      "name": "Medical Coding & Billing",
+      "credits": 4,
+      "hours": 120,
+      "hoursManual": false,
+      "startWeek": 28,
+      "duration": 18
+    },
+    {
+      "name": "Medical Records Management",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 28,
+      "duration": 8
+    },
+    {
+      "name": "Health Care Communication Skills",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 28,
+      "duration": 4
     }
   ]
 }

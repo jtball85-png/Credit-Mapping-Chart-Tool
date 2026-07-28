@@ -1,5 +1,7 @@
 // Snapshots every program currently in the live Firestore database into
-// program-maps/<Program>.json — one file per program, always all of them.
+// program-maps/<Program>/<YYYY-MM-DD>.json — one dated file per program,
+// always all of them, so a specific day's mapping can always be found by
+// date rather than by digging through git history.
 // Uses the Firestore REST API directly (no SDK/npm dependency), same
 // pattern used for the block-mapping updates applied via Claude Code.
 //
@@ -65,9 +67,8 @@ async function fetchAllDocs(collection) {
     };
   });
 
-  if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-
   const savedAt = new Date().toISOString();
+  const date = savedAt.slice(0, 10); // YYYY-MM-DD
   let written = 0;
   for (const program of programs) {
     const rows = classes
@@ -75,10 +76,14 @@ async function fetchAllDocs(collection) {
       .sort((a, b) => a.startWeek - b.startWeek)
       .map(({ program: _drop, ...rest }) => rest); // program is implied by the file
 
-    const outFile = path.join(OUT_DIR, `${program}.json`);
-    const payload = { program, savedAt, classes: rows };
+    const programDir = path.join(OUT_DIR, program);
+    if (!fs.existsSync(programDir)) fs.mkdirSync(programDir, { recursive: true });
+
+    const outFile = path.join(programDir, `${date}.json`);
+    const overwriting = fs.existsSync(outFile);
+    const payload = { program, date, savedAt, classes: rows };
     fs.writeFileSync(outFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
-    console.log(`Wrote ${program}.json (${rows.length} classes)`);
+    console.log(`Wrote ${program}/${date}.json (${rows.length} classes)${overwriting ? ' [overwrote existing save from today]' : ''}`);
     written++;
   }
 

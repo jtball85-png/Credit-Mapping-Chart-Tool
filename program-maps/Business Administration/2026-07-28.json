@@ -1,6 +1,7 @@
 {
-  "program": "Business & Finance",
-  "savedAt": "2026-07-28T21:00:48.969Z",
+  "program": "Business Administration",
+  "date": "2026-07-28",
+  "savedAt": "2026-07-28T21:05:04.079Z",
   "classes": [
     {
       "name": "Accounting Principles (incl. Electronic Calculator)",
@@ -83,43 +84,11 @@
       "duration": 4
     },
     {
-      "name": "Accounting 2",
-      "credits": 3,
-      "hours": 90,
-      "hoursManual": false,
-      "startWeek": 23,
-      "duration": 3
-    },
-    {
-      "name": "QuickBooks Online",
-      "credits": 2,
-      "hours": 60,
-      "hoursManual": false,
-      "startWeek": 26,
-      "duration": 2
-    },
-    {
-      "name": "Accounting 3",
-      "credits": 3,
-      "hours": 90,
-      "hoursManual": false,
-      "startWeek": 31,
-      "duration": 3
-    },
-    {
-      "name": "Payroll Accounting",
-      "credits": 2,
-      "hours": 60,
-      "hoursManual": false,
-      "startWeek": 34,
-      "duration": 2
-    },
-    {
       "name": "Workforce Readiness",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
-      "startWeek": 36,
+      "startWeek": 23,
       "duration": 1
     },
     {
@@ -127,7 +96,7 @@
       "credits": 2,
       "hours": 60,
       "hoursManual": false,
-      "startWeek": 37,
+      "startWeek": 24,
       "duration": 2
     },
     {
@@ -135,15 +104,7 @@
       "credits": 2,
       "hours": 60,
       "hoursManual": false,
-      "startWeek": 39,
-      "duration": 2
-    },
-    {
-      "name": "Accounting Capstone Project",
-      "credits": 2,
-      "hours": 60,
-      "hoursManual": false,
-      "startWeek": 41,
+      "startWeek": 26,
       "duration": 2
     }
   ]

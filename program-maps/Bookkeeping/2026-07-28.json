@@ -1,6 +1,7 @@
 {
-  "program": "Business Administration",
-  "savedAt": "2026-07-28T21:00:48.969Z",
+  "program": "Bookkeeping",
+  "date": "2026-07-28",
+  "savedAt": "2026-07-28T21:05:04.079Z",
   "classes": [
     {
       "name": "Accounting Principles (incl. Electronic Calculator)",
@@ -35,31 +36,23 @@
       "duration": 1
     },
     {
-      "name": "Microsoft Word",
-      "credits": 1,
-      "hours": 30,
-      "hoursManual": false,
-      "startWeek": 7,
-      "duration": 1
-    },
-    {
       "name": "Business Math",
       "credits": 2,
       "hours": 60,
       "hoursManual": false,
-      "startWeek": 8,
+      "startWeek": 7,
       "duration": 2
     },
     {
-      "name": "Communications (incl. MS/Google Suites & Cloud)",
-      "credits": 3,
-      "hours": 90,
+      "name": "Microsoft Excel",
+      "credits": 4,
+      "hours": 120,
       "hoursManual": false,
-      "startWeek": 10,
-      "duration": 3
+      "startWeek": 9,
+      "duration": 4
     },
     {
-      "name": "HR",
+      "name": "Microsoft Word",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
@@ -75,31 +68,39 @@
       "duration": 2
     },
     {
-      "name": "Microsoft Excel",
-      "credits": 4,
-      "hours": 120,
+      "name": "Accounting 2",
+      "credits": 2,
+      "hours": 60,
       "hoursManual": false,
       "startWeek": 19,
-      "duration": 4
+      "duration": 2
+    },
+    {
+      "name": "QuickBooks Online",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 21,
+      "duration": 2
+    },
+    {
+      "name": "Payroll Accounting",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 23,
+      "duration": 2
     },
     {
       "name": "Workforce Readiness",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
-      "startWeek": 23,
+      "startWeek": 25,
       "duration": 1
     },
     {
-      "name": "Business English",
-      "credits": 2,
-      "hours": 60,
-      "hoursManual": false,
-      "startWeek": 24,
-      "duration": 2
-    },
-    {
-      "name": "Business Capstone Project",
+      "name": "Accounting Capstone Project",
       "credits": 2,
       "hours": 60,
       "hoursManual": false,

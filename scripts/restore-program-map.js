@@ -1,9 +1,11 @@
-// Restores ONE program's classes in the live Firestore database from its
-// program-maps/<Program>.json snapshot. Deletes that program's current
-// class docs and recreates them from the file (new Firestore doc IDs —
-// nothing else references the old ones). Never touches any other program.
+// Restores ONE program's classes in the live Firestore database from a
+// dated program-maps/<Program>/<YYYY-MM-DD>.json snapshot. Deletes that
+// program's current class docs and recreates them from the file (new
+// Firestore doc IDs — nothing else references the old ones). Never
+// touches any other program.
 //
-// Usage: node scripts/restore-program-map.js "Bookkeeping"
+// Usage: node scripts/restore-program-map.js "Bookkeeping" 2026-07-28
+//        node scripts/restore-program-map.js "Bookkeeping"   (uses the most recent saved date)
 
 const fs = require('fs');
 const path = require('path');
@@ -81,14 +83,35 @@ async function fetchAllClasses() {
 
 (async () => {
   const program = process.argv[2];
+  let date = process.argv[3];
   if (!program) {
-    console.error('Usage: node scripts/restore-program-map.js "<ProgramName>"');
+    console.error('Usage: node scripts/restore-program-map.js "<ProgramName>" [YYYY-MM-DD]');
     process.exit(1);
   }
 
-  const mapFile = path.join(MAPS_DIR, `${program}.json`);
+  const programDir = path.join(MAPS_DIR, program);
+  if (!fs.existsSync(programDir)) {
+    console.error(`No snapshots found for "${program}" (looked in ${programDir})`);
+    process.exit(1);
+  }
+
+  if (!date) {
+    const available = fs.readdirSync(programDir)
+      .filter(f => f.endsWith('.json'))
+      .map(f => f.replace(/\.json$/, ''))
+      .sort();
+    if (!available.length) {
+      console.error(`No saved snapshots found in ${programDir}`);
+      process.exit(1);
+    }
+    date = available[available.length - 1];
+    console.log(`No date given — using most recent save: ${date}`);
+  }
+
+  const mapFile = path.join(programDir, `${date}.json`);
   if (!fs.existsSync(mapFile)) {
-    console.error(`No snapshot found at ${mapFile}`);
+    const available = fs.readdirSync(programDir).filter(f => f.endsWith('.json')).map(f => f.replace(/\.json$/, ''));
+    console.error(`No snapshot found at ${mapFile}\nAvailable dates for "${program}": ${available.join(', ')}`);
     process.exit(1);
   }
   const snapshot = JSON.parse(fs.readFileSync(mapFile, 'utf8'));
