@@ -1,0 +1,102 @@
+{
+  "program": "Front Office Medical Assistant",
+  "savedAt": "2026-07-28T21:00:48.969Z",
+  "classes": [
+    {
+      "name": "Workforce Readiness",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 1,
+      "duration": 30
+    },
+    {
+      "name": "Computer & Internet Fundamentals",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 1,
+      "duration": 4
+    },
+    {
+      "name": "Medical Terminology",
+      "credits": 4,
+      "hours": 120,
+      "hoursManual": false,
+      "startWeek": 1,
+      "duration": 15
+    },
+    {
+      "name": "MA Theory",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 1,
+      "duration": 8
+    },
+    {
+      "name": "Microsoft Office Suite",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 5,
+      "duration": 8
+    },
+    {
+      "name": "Business English",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 9,
+      "duration": 4
+    },
+    {
+      "name": "Health Care Communication Skills",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 9,
+      "duration": 4
+    },
+    {
+      "name": "Capstone Projects",
+      "credits": 3,
+      "hours": 90,
+      "hoursManual": false,
+      "startWeek": 11,
+      "duration": 20
+    },
+    {
+      "name": "Pharmacology",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 11,
+      "duration": 4
+    },
+    {
+      "name": "Medical Records Management",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 14,
+      "duration": 8
+    },
+    {
+      "name": "Medical Billing & Coding",
+      "credits": 4,
+      "hours": 120,
+      "hoursManual": false,
+      "startWeek": 16,
+      "duration": 15
+    },
+    {
+      "name": "Computers in the Medical Office / Electronic Medical Records",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 17,
+      "duration": 8
+    }
+  ]
+}

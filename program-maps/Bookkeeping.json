@@ -1,0 +1,110 @@
+{
+  "program": "Bookkeeping",
+  "savedAt": "2026-07-28T21:00:48.969Z",
+  "classes": [
+    {
+      "name": "Accounting Principles (incl. Electronic Calculator)",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 1,
+      "duration": 2
+    },
+    {
+      "name": "Accounting 1",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 3,
+      "duration": 1
+    },
+    {
+      "name": "Computer & Internet Fundamentals (incl. Keyboarding)",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 4,
+      "duration": 2
+    },
+    {
+      "name": "Microsoft Outlook",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 6,
+      "duration": 1
+    },
+    {
+      "name": "Business Math",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 7,
+      "duration": 2
+    },
+    {
+      "name": "Microsoft Excel",
+      "credits": 4,
+      "hours": 120,
+      "hoursManual": false,
+      "startWeek": 9,
+      "duration": 4
+    },
+    {
+      "name": "Microsoft Word",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 16,
+      "duration": 1
+    },
+    {
+      "name": "AI Prompt Engineering",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 17,
+      "duration": 2
+    },
+    {
+      "name": "Accounting 2",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 19,
+      "duration": 2
+    },
+    {
+      "name": "QuickBooks Online",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 21,
+      "duration": 2
+    },
+    {
+      "name": "Payroll Accounting",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 23,
+      "duration": 2
+    },
+    {
+      "name": "Workforce Readiness",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 25,
+      "duration": 1
+    },
+    {
+      "name": "Accounting Capstone Project",
+      "credits": 2,
+      "hours": 60,
+      "hoursManual": false,
+      "startWeek": 26,
+      "duration": 2
+    }
+  ]
+}

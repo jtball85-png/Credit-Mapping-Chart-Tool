@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Program Schedule/Credit Chart</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --border: #e0e0dc;
+    --text: #2b2b28;
+    --muted: #6b6b64;
+    --accent: #3b6e5e;
+    --grid-line: #ececea;
+    --week-label: #9a9a92;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  header {
+    padding: 20px 24px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  h1 {
+    font-size: 20px;
+    margin: 0;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .sync-status {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sync-status .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #c9743f;
+  }
+  .sync-status.live {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .sync-status.live .dot {
+    background: var(--accent);
+  }
+  .sync-status.error {
+    color: #b23b3b;
+    font-weight: 600;
+  }
+  .sync-status.error .dot {
+    background: #b23b3b;
+  }
+  select, button, input {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+  }
+  button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  button:hover { opacity: 0.9; }
+  button.secondary {
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  main {
+    padding: 24px;
+  }
+  .chart-scroll {
+    overflow: auto;
+    max-height: 75vh;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+  .chart {
+    min-width: calc(220px + 24px * 45);
+  }
+  .row-label-col {
+    width: 220px;
+    flex: 0 0 220px;
+    box-sizing: border-box;
+  }
+  .week-col-width {
+    width: 24px;
+    flex: 0 0 24px;
+    box-sizing: border-box;
+  }
+
+  .chart-sticky-head {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: #fafaf8;
+  }
+
+  .weeks-title-row {
+    display: flex;
+    border-bottom: 1px solid var(--grid-line);
+  }
+  .weeks-title-row .weeks-title-label {
+    width: calc(24px * var(--total-weeks, 45));
+    padding: 6px 8px 2px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .chart-header {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: #fafaf8;
+  }
+  .chart-header .row-label-col {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    left: 0;
+    background: #fafaf8;
+    z-index: 4;
+  }
+  .week-numbers {
+    display: flex;
+  }
+  .week-number-cell {
+    text-align: center;
+    font-size: 9px;
+    color: var(--week-label);
+    padding: 8px 0 4px;
+    border-right: 1px solid var(--grid-line);
+  }
+  .week-number-cell.major {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .totals-row {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: #fafaf8;
+  }
+  .totals-row .row-label-col {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    left: 0;
+    background: #fafaf8;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .totals-row .grand-total {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .totals-cell {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    text-align: center;
+    padding: 8px 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    border-right: 1px solid var(--border);
+  }
+  .totals-cell.week-shade {
+    background: #f3f2ef;
+  }
+
+  .chart-row {
+    display: flex;
+    border-bottom: 1px solid var(--grid-line);
+  }
+  .chart-row:hover { background: #fafaf8; }
+  .chart-row .row-label-col {
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    position: sticky;
+    left: 0;
+    background: var(--panel);
+    z-index: 1;
+  }
+  .chart-row:hover .row-label-col { background: #fafaf8; }
+  .row-label-col .class-name {
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .row-label-col .class-meta {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .row-label-col .row-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .row-label-col .row-actions button {
+    font-size: 10px;
+    padding: 3px 6px;
+    font-weight: 500;
+  }
+
+  .week-track {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: calc(24px * var(--total-weeks, 45));
+    flex: 0 0 auto;
+    min-height: 48px;
+  }
+  .week-track .week-col-width {
+    height: 100%;
+    border-right: 1px solid var(--grid-line);
+  }
+  .week-col-width.week-shade {
+    background: #f5f5f3;
+  }
+  .chart-header .week-col-width.week-shade {
+    background: #f3f2ef;
+  }
+  .bar {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    background: var(--accent);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0.9;
+    z-index: 2;
+  }
+
+  .program-colors-0 { background: #3b6e5e; }
+  .program-colors-1 { background: #6e5e3b; }
+  .program-colors-2 { background: #3b5e6e; }
+  .program-colors-3 { background: #6e3b5e; }
+  .program-colors-4 { background: #5e6e3b; }
+
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  dialog {
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+    max-width: 380px;
+    width: 90%;
+  }
+  dialog::backdrop {
+    background: rgba(0,0,0,0.4);
+  }
+  .dialog-inner {
+    padding: 20px;
+  }
+  .dialog-inner h2 {
+    margin-top: 0;
+    font-size: 16px;
+  }
+  .field {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .field input, .field select {
+    width: 100%;
+  }
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .two-col {
+    display: flex;
+    gap: 10px;
+  }
+  .two-col .field { flex: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Program Schedule/Credit Chart</h1>
+  <div class="controls">
+    <span id="syncStatus" class="sync-status"><span class="dot"></span> Connecting…</span>
+    <select id="programFilter">
+      <option value="">All Programs</option>
+    </select>
+    <button class="secondary" id="manageProgramsBtn" type="button">Manage Programs</button>
+    <button id="addRowBtn" type="button">+ Add Class</button>
+  </div>
+</header>
+
+<main>
+  <div class="chart-scroll">
+    <div class="chart" id="chart">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</main>
+
+<!-- Add/Edit Class Dialog -->
+<dialog id="classDialog">
+  <form method="dialog" class="dialog-inner" id="classForm">
+    <h2 id="dialogTitle">Add Class</h2>
+
+    <div class="field">
+      <label for="classProgram">Program</label>
+      <select id="classProgram" required></select>
+    </div>
+
+    <div class="field">
+      <label for="className">Class Name</label>
+      <input type="text" id="className" required placeholder="e.g. Intro to Welding">
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label for="classCredits">Credits</label>
+        <input type="number" id="classCredits" min="1" step="1">
+      </div>
+      <div class="field">
+        <label for="classHours">Hours <span style="font-weight:400; color:var(--muted);">(1 credit = 30 hrs)</span></label>
+        <div style="display:flex; gap:6px;">
+          <input type="number" id="classHours" min="0" step="1" readonly>
+          <button type="button" class="secondary" id="toggleHoursBtn" style="white-space:nowrap; font-size:12px;">Adjust</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label for="classStartWeek">Start Week (1-45)</label>
+        <input type="number" id="classStartWeek" min="1" max="45" required>
+      </div>
+      <div class="field">
+        <label for="classDuration">Duration (weeks)</label>
+        <input type="number" id="classDuration" min="1" max="45" required>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="secondary" id="deleteRowBtn" style="margin-right: auto; display:none;">Delete</button>
+      <button type="button" class="secondary" id="cancelDialogBtn">Cancel</button>
+      <button type="submit" id="saveRowBtn">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Manage Programs Dialog -->
+<dialog id="programsDialog">
+  <div class="dialog-inner">
+    <h2>Manage Programs</h2>
+    <div class="field">
+      <label for="newProgramName">Add a Program</label>
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="newProgramName" placeholder="e.g. Welding">
+        <button type="button" id="addProgramBtn">Add</button>
+      </div>
+    </div>
+    <ul id="programList" style="list-style:none; padding:0; margin:12px 0; font-size:13px;"></ul>
+    <div class="dialog-actions">
+      <button type="button" class="secondary" id="importSeedBtn" style="margin-right:auto;">Import Starter Data</button>
+      <button type="button" class="secondary" id="closeProgramsBtn">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, doc, setDoc, addDoc, deleteDoc,
+  onSnapshot, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC3RZENEL9yQOZmS6zIx2vaZ5xZWbYY8ng",
+  authDomain: "program-schedule-chart.firebaseapp.com",
+  projectId: "program-schedule-chart",
+  storageBucket: "program-schedule-chart.firebasestorage.app",
+  messagingSenderId: "1066315265415",
+  appId: "1:1066315265415:web:0b745f1c23a35208d28f22"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+const classesCol = collection(db, "classes");
+const programsCol = collection(db, "programs");
+
+const TOTAL_WEEKS = 45;
+
+// Starter data from Business and Finance Program R6.pdf (04/17/26). Hours are as
+// listed in the source; credits = hours / 30. Duration in weeks = hours / 30
+// (30 hours = 1 week of work). Start weeks are placed explicitly (not simply
+// back-to-back) so that credits — which are attributed to the 15-week block
+// containing each class's END week, see the "Credit totals" block below —
+// land on at least 12 credits per block, the minimum for financial aid.
+// Bookkeeping and Business Administration (24 total credits) hit 12/12 across
+// two blocks; Business & Finance (36 total credits) hits 12/12/12 across all
+// three, with short unscheduled gaps used as buffers between blocks so a
+// class's credits don't spill into the next block by accident.
+// Only used by the one-time "Import Starter Data" button — live data lives in Firestore.
+const HOURS_PER_CREDIT_SEED = 30;
+const HOURS_PER_WEEK_SEED = 30;
+function mkClass(id, program, name, hours, startWeek) {
+  const duration = hours / HOURS_PER_WEEK_SEED;
+  return {
+    id, program, name,
+    credits: hours / HOURS_PER_CREDIT_SEED,
+    hours, hoursManual: false,
+    startWeek, duration
+  };
+}
+
+function buildSeedData() {
+  const classes = [
+    // Bookkeeping (720 hrs) — block1 wk1-12 (12cr), gap wk13-15, block2 wk16-27 (12cr)
+    mkClass(1, "Bookkeeping", "Accounting Principles (incl. Electronic Calculator)", 60, 1),
+    mkClass(2, "Bookkeeping", "Accounting 1", 30, 3),
+    mkClass(3, "Bookkeeping", "Computer & Internet Fundamentals (incl. Keyboarding)", 60, 4),
+    mkClass(4, "Bookkeeping", "Microsoft Outlook", 30, 6),
+    mkClass(5, "Bookkeeping", "Business Math", 60, 7),
+    mkClass(6, "Bookkeeping", "Microsoft Excel", 120, 9),
+    mkClass(7, "Bookkeeping", "Microsoft Word", 30, 16),
+    mkClass(8, "Bookkeeping", "AI Prompt Engineering", 60, 17),
+    mkClass(9, "Bookkeeping", "Accounting 2", 60, 19),
+    mkClass(10, "Bookkeeping", "QuickBooks Online", 60, 21),
+    mkClass(11, "Bookkeeping", "Payroll Accounting", 60, 23),
+    mkClass(12, "Bookkeeping", "Workforce Readiness", 30, 25),
+    mkClass(13, "Bookkeeping", "Accounting Capstone Project", 60, 26),
+
+    // Business Administration (720 hrs) — block1 wk1-12 (12cr), gap wk13-15, block2 wk16-27 (12cr)
+    mkClass(14, "Business Administration", "Accounting Principles (incl. Electronic Calculator)", 60, 1),
+    mkClass(15, "Business Administration", "Accounting 1", 30, 3),
+    mkClass(16, "Business Administration", "Computer & Internet Fundamentals (incl. Keyboarding)", 60, 4),
+    mkClass(17, "Business Administration", "Microsoft Outlook", 30, 6),
+    mkClass(18, "Business Administration", "Microsoft Word", 30, 7),
+    mkClass(19, "Business Administration", "Business Math", 60, 8),
+    mkClass(20, "Business Administration", "Communications (incl. MS/Google Suites & Cloud)", 90, 10),
+    mkClass(21, "Business Administration", "HR", 30, 16),
+    mkClass(22, "Business Administration", "AI Prompt Engineering", 60, 17),
+    mkClass(23, "Business Administration", "Microsoft Excel", 120, 19),
+    mkClass(24, "Business Administration", "Workforce Readiness", 30, 23),
+    mkClass(25, "Business Administration", "Business English", 60, 24),
+    mkClass(26, "Business Administration", "Business Capstone Project", 60, 26),
+
+    // Business & Finance (1080 hrs) — block1 wk1-12 (12cr), gap wk13-15, block2 wk16-27 (12cr), gap wk28-30, block3 wk31-42 (12cr)
+    mkClass(27, "Business & Finance", "Accounting Principles (incl. Electronic Calculator)", 60, 1),
+    mkClass(28, "Business & Finance", "Accounting 1", 30, 3),
+    mkClass(29, "Business & Finance", "Computer & Internet Fundamentals (incl. Keyboarding)", 60, 4),
+    mkClass(30, "Business & Finance", "Microsoft Outlook", 30, 6),
+    mkClass(31, "Business & Finance", "Microsoft Word", 30, 7),
+    mkClass(32, "Business & Finance", "Business Math", 60, 8),
+    mkClass(33, "Business & Finance", "Communications (incl. MS/Google Suites & Cloud)", 90, 10),
+    mkClass(34, "Business & Finance", "HR", 30, 16),
+    mkClass(35, "Business & Finance", "AI Prompt Engineering", 60, 17),
+    mkClass(36, "Business & Finance", "Microsoft Excel", 120, 19),
+    mkClass(37, "Business & Finance", "Accounting 2", 90, 23),
+    mkClass(38, "Business & Finance", "QuickBooks Online", 60, 26),
+    mkClass(39, "Business & Finance", "Accounting 3", 90, 31),
+    mkClass(40, "Business & Finance", "Payroll Accounting", 60, 34),
+    mkClass(41, "Business & Finance", "Workforce Readiness", 30, 36),
+    mkClass(42, "Business & Finance", "Business English", 60, 37),
+    mkClass(43, "Business & Finance", "Business Capstone Project", 60, 39),
+    mkClass(44, "Business & Finance", "Accounting Capstone Project", 60, 41)
+  ];
+
+  return {
+    programs: ["Bookkeeping", "Business Administration", "Business & Finance"],
+    classes
+  };
+}
+
+let state = { programs: [], classes: [] };
+let editingId = null;
+
+const chartEl = document.getElementById('chart');
+const programFilterEl = document.getElementById('programFilter');
+const classDialog = document.getElementById('classDialog');
+const classForm = document.getElementById('classForm');
+const dialogTitle = document.getElementById('dialogTitle');
+const classProgramEl = document.getElementById('classProgram');
+const classNameEl = document.getElementById('className');
+const classCreditsEl = document.getElementById('classCredits');
+const classHoursEl = document.getElementById('classHours');
+const classStartWeekEl = document.getElementById('classStartWeek');
+const classDurationEl = document.getElementById('classDuration');
+const deleteRowBtn = document.getElementById('deleteRowBtn');
+const toggleHoursBtn = document.getElementById('toggleHoursBtn');
+
+const HOURS_PER_CREDIT = 30;
+let hoursManuallyAdjusted = false;
+
+function setHoursManualMode(manual) {
+  hoursManuallyAdjusted = manual;
+  classHoursEl.readOnly = !manual;
+  toggleHoursBtn.textContent = manual ? 'Auto' : 'Adjust';
+  if (!manual) {
+    classHoursEl.value = (parseInt(classCreditsEl.value, 10) || 0) * HOURS_PER_CREDIT;
+  }
+}
+
+toggleHoursBtn.addEventListener('click', () => setHoursManualMode(!hoursManuallyAdjusted));
+
+classCreditsEl.addEventListener('input', () => {
+  if (!hoursManuallyAdjusted) {
+    classHoursEl.value = (parseInt(classCreditsEl.value, 10) || 0) * HOURS_PER_CREDIT;
+  }
+});
+
+function programColorClass(program) {
+  const idx = state.programs.indexOf(program) % 5;
+  return `program-colors-${idx < 0 ? 0 : idx}`;
+}
+
+function renderProgramFilter() {
+  programFilterEl.innerHTML = '<option value="">All Programs</option>' +
+    state.programs.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function renderProgramSelect() {
+  classProgramEl.innerHTML = state.programs.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function renderChart() {
+  chartEl.style.setProperty('--total-weeks', TOTAL_WEEKS);
+
+  const filter = programFilterEl.value;
+  const rows = state.classes
+    .filter(c => !filter || c.program === filter)
+    .sort((a, b) => a.startWeek - b.startWeek);
+
+  function weekShadeClass(wk) {
+    return (wk >= 1 && wk <= 15) || (wk >= 31 && wk <= 45) ? ' week-shade' : '';
+  }
+
+  const weekBgCells = Array.from({length: TOTAL_WEEKS}, (_, i) => {
+    const wk = i + 1;
+    return `<div class="week-col-width${weekShadeClass(wk)}"></div>`;
+  }).join('');
+
+  // Credit totals per 15-week block, attributed to the block where each class ENDS.
+  const BLOCK_SIZE = 15;
+  const blockCount = Math.ceil(TOTAL_WEEKS / BLOCK_SIZE);
+  const blockTotals = new Array(blockCount).fill(0);
+  rows.forEach(c => {
+    const endWeek = c.startWeek + c.duration - 1;
+    const blockIndex = Math.min(blockCount - 1, Math.floor((endWeek - 1) / BLOCK_SIZE));
+    blockTotals[blockIndex] += c.credits || 0;
+  });
+
+  const grandTotalCredits = blockTotals.reduce((sum, n) => sum + n, 0);
+
+  const totalsRowHtml = `<div class="totals-row">
+    <div class="row-label-col">
+      <span>Total Credits</span>
+      <span class="grand-total">${grandTotalCredits} cr</span>
+    </div>
+    ${Array.from({length: blockCount}, (_, i) => {
+      const blockStartWk = i * BLOCK_SIZE + 1;
+      const isShaded = weekShadeClass(blockStartWk) !== '';
+      const widthPx = BLOCK_SIZE * 24;
+      return `<div class="totals-cell${isShaded ? ' week-shade' : ''}" style="width:${widthPx}px;">${blockTotals[i]} cr</div>`;
+    }).join('')}
+  </div>`;
+
+  let html = `<div class="chart-sticky-head">
+    <div class="weeks-title-row">
+      <div class="row-label-col"></div>
+      <div class="weeks-title-label">Weeks (1-${TOTAL_WEEKS})</div>
+    </div>
+    <div class="chart-header">
+      <div class="row-label-col">Class</div>
+      <div class="week-numbers">
+        ${Array.from({length: TOTAL_WEEKS}, (_, i) => {
+          const wk = i + 1;
+          return `<div class="week-col-width week-number-cell${wk % 5 === 0 ? ' major' : ''}${weekShadeClass(wk)}">${wk}</div>`;
+        }).join('')}
+      </div>
+    </div>
+    ${totalsRowHtml}
+  </div>`;
+
+  if (rows.length === 0) {
+    chartEl.innerHTML = html + `<div class="empty-state">No classes yet. Click "+ Add Class" to get started.</div>`;
+    return;
+  }
+
+  rows.forEach(c => {
+    const endWeek = c.startWeek + c.duration - 1;
+    const leftPx = (c.startWeek - 1) * 24;
+    const widthPx = c.duration * 24;
+    html += `<div class="chart-row" data-id="${c.id}">
+      <div class="row-label-col">
+        <div class="class-name">${escapeHtml(c.name)}</div>
+        <div class="class-meta">${escapeHtml(c.program)} · ${c.credits ?? 0} cr · ${c.hours ?? 0} hrs</div>
+        <div class="row-actions">
+          <button type="button" class="secondary edit-btn" data-id="${c.id}">Edit</button>
+        </div>
+      </div>
+      <div class="week-track">
+        ${weekBgCells}
+        <div class="bar ${programColorClass(c.program)}" style="left:${leftPx}px; width:${widthPx}px;" title="Weeks ${c.startWeek}-${endWeek}">
+          Wk ${c.startWeek}-${endWeek}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  chartEl.innerHTML = html;
+
+  chartEl.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => openEditDialog(btn.dataset.id));
+  });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function openAddDialog() {
+  editingId = null;
+  dialogTitle.textContent = 'Add Class';
+  deleteRowBtn.style.display = 'none';
+  renderProgramSelect();
+  classForm.reset();
+  const currentFilter = programFilterEl.value;
+  if (currentFilter) classProgramEl.value = currentFilter;
+  setHoursManualMode(false);
+  classDialog.showModal();
+}
+
+function openEditDialog(id) {
+  const c = state.classes.find(x => x.id === id);
+  if (!c) return;
+  editingId = id;
+  dialogTitle.textContent = 'Edit Class';
+  deleteRowBtn.style.display = 'inline-block';
+  renderProgramSelect();
+  classProgramEl.value = c.program;
+  classNameEl.value = c.name;
+  classCreditsEl.value = c.credits;
+  classStartWeekEl.value = c.startWeek;
+  classDurationEl.value = c.duration;
+  setHoursManualMode(!!c.hoursManual);
+  classHoursEl.value = c.hours;
+  classDialog.showModal();
+}
+
+document.getElementById('addRowBtn').addEventListener('click', openAddDialog);
+document.getElementById('cancelDialogBtn').addEventListener('click', () => classDialog.close());
+
+classForm.addEventListener('submit', (e) => {
+  const startWeek = parseInt(classStartWeekEl.value, 10);
+  const duration = parseInt(classDurationEl.value, 10);
+
+  if (startWeek < 1 || startWeek > TOTAL_WEEKS) {
+    alert(`Start week must be between 1 and ${TOTAL_WEEKS}.`);
+    e.preventDefault();
+    return;
+  }
+  if (startWeek + duration - 1 > TOTAL_WEEKS) {
+    const proceed = confirm(`This class runs past week ${TOTAL_WEEKS}. Save anyway?`);
+    if (!proceed) { e.preventDefault(); return; }
+  }
+
+  const data = {
+    program: classProgramEl.value,
+    name: classNameEl.value.trim(),
+    credits: parseInt(classCreditsEl.value, 10) || 0,
+    hours: parseFloat(classHoursEl.value) || 0,
+    hoursManual: hoursManuallyAdjusted,
+    startWeek,
+    duration
+  };
+
+  const writePromise = editingId
+    ? setDoc(doc(classesCol, editingId), data)
+    : addDoc(classesCol, data);
+
+  writePromise.catch(err => alert('Could not save to the shared database: ' + err.message));
+});
+
+deleteRowBtn.addEventListener('click', () => {
+  if (editingId && confirm('Delete this class?')) {
+    deleteDoc(doc(classesCol, editingId)).catch(err => alert('Could not delete: ' + err.message));
+    classDialog.close();
+  }
+});
+
+programFilterEl.addEventListener('change', renderChart);
+
+// Manage Programs dialog
+const programsDialog = document.getElementById('programsDialog');
+const programListEl = document.getElementById('programList');
+
+function renderProgramList() {
+  programListEl.innerHTML = state.programs.map(p => {
+    const count = state.classes.filter(c => c.program === p).length;
+    return `<li style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--grid-line); gap:8px;">
+      <span>${escapeHtml(p)} <span style="color:var(--muted);">(${count} classes)</span></span>
+      <span style="display:flex; gap:6px; flex-shrink:0;">
+        <button type="button" class="secondary rename-program-btn" data-program="${escapeHtml(p)}" style="font-size:11px; padding:3px 6px;">Rename</button>
+        <button type="button" class="secondary remove-program-btn" data-program="${escapeHtml(p)}" style="font-size:11px; padding:3px 6px;">Delete</button>
+      </span>
+    </li>`;
+  }).join('');
+
+  programListEl.querySelectorAll('.rename-program-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const oldName = btn.dataset.program;
+      const newName = prompt(`Rename "${oldName}" to:`, oldName);
+      if (!newName || !newName.trim() || newName.trim() === oldName) return;
+      const trimmed = newName.trim();
+      if (state.programs.includes(trimmed)) {
+        alert(`A program named "${trimmed}" already exists.`);
+        return;
+      }
+      try {
+        const batch = writeBatch(db);
+        batch.set(doc(programsCol, trimmed), { name: trimmed });
+        batch.delete(doc(programsCol, oldName));
+        state.classes
+          .filter(c => c.program === oldName)
+          .forEach(c => batch.update(doc(classesCol, c.id), { program: trimmed }));
+        await batch.commit();
+      } catch (err) {
+        alert('Could not rename program: ' + err.message);
+      }
+    });
+  });
+
+  programListEl.querySelectorAll('.remove-program-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const name = btn.dataset.program;
+      const count = state.classes.filter(c => c.program === name).length;
+      const message = count > 0
+        ? `Delete "${name}"? This will also delete ${count} class${count === 1 ? '' : 'es'} assigned to it.`
+        : `Delete "${name}"?`;
+      if (!confirm(message)) return;
+      try {
+        const batch = writeBatch(db);
+        batch.delete(doc(programsCol, name));
+        state.classes
+          .filter(c => c.program === name)
+          .forEach(c => batch.delete(doc(classesCol, c.id)));
+        await batch.commit();
+      } catch (err) {
+        alert('Could not delete program: ' + err.message);
+      }
+    });
+  });
+}
+
+document.getElementById('manageProgramsBtn').addEventListener('click', () => {
+  renderProgramList();
+  programsDialog.showModal();
+});
+document.getElementById('closeProgramsBtn').addEventListener('click', () => programsDialog.close());
+document.getElementById('addProgramBtn').addEventListener('click', () => {
+  const nameInput = document.getElementById('newProgramName');
+  const name = nameInput.value.trim();
+  if (name && !state.programs.includes(name)) {
+    setDoc(doc(programsCol, name), { name })
+      .then(() => { nameInput.value = ''; })
+      .catch(err => alert('Could not add program: ' + err.message));
+  }
+});
+
+// Live sync with Firestore — every browser reading this app stays in sync automatically.
+const syncStatusEl = document.getElementById('syncStatus');
+const importSeedBtn = document.getElementById('importSeedBtn');
+
+function setSyncStatus(text, mode) {
+  syncStatusEl.innerHTML = `<span class="dot"></span> ${text}`;
+  syncStatusEl.className = 'sync-status' + (mode ? ` ${mode}` : '');
+}
+
+let programsLoaded = false;
+let classesLoaded = false;
+function maybeMarkLive() {
+  if (programsLoaded && classesLoaded) setSyncStatus('Live — synced with shared database', 'live');
+}
+
+onSnapshot(programsCol, snapshot => {
+  state.programs = snapshot.docs.map(d => d.id).sort();
+  programsLoaded = true;
+  renderProgramFilter();
+  renderChart();
+  if (programsDialog.open) renderProgramList();
+  maybeMarkLive();
+}, err => setSyncStatus('Connection error: ' + err.message, 'error'));
+
+onSnapshot(classesCol, snapshot => {
+  state.classes = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  classesLoaded = true;
+  renderChart();
+  if (programsDialog.open) renderProgramList();
+  maybeMarkLive();
+}, err => setSyncStatus('Connection error: ' + err.message, 'error'));
+
+importSeedBtn.addEventListener('click', async () => {
+  if (state.classes.length > 0 || state.programs.length > 0) {
+    const proceed = confirm(
+      'There is already data in the shared database. Importing starter data again will not remove ' +
+      'existing programs/classes, but could create duplicates if the starter programs already exist. Continue?'
+    );
+    if (!proceed) return;
+  }
+  try {
+    const seed = buildSeedData();
+    const batch = writeBatch(db);
+    seed.programs.forEach(name => batch.set(doc(programsCol, name), { name }));
+    seed.classes.forEach(c => {
+      const { id, ...data } = c;
+      batch.set(doc(classesCol, String(id)), data);
+    });
+    await batch.commit();
+    alert('Starter data imported.');
+  } catch (err) {
+    alert('Could not import starter data: ' + err.message);
+  }
+});
+
+// init
+renderProgramFilter();
+renderChart();
+</script>
+
+</body>
+</html>
