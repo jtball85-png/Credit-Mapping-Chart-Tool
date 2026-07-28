@@ -1,5 +1,5 @@
 # Project: Program Schedule/Credit Chart
-Last updated: 2026-07-10 by Claude Code (end of day)
+Last updated: 2026-07-28 by Claude Code (end of day)
 
 ## What this project is
 A visual scheduling tool for course programs across a 45-week calendar. Teachers add classes (name, credits, hours, start week, duration) and each class renders as a horizontal bar spanning the weeks it runs, laid out across columns 1-45. Multiple teachers will use it from a shared drive, with a dropdown to filter the view down to a single program.
@@ -38,9 +38,9 @@ Programs have Classes. Each Class has: name, credits, hours, start week (1-45), 
 Brand new project, no code written yet. Next step is building an interactive in-memory prototype (add rows, see bars render across the 1-45 week grid, filter by program) so the interaction can be validated before wiring up shared-drive file save/load.
 
 ## Where we left off
-Last commit: N/A — no git repository initialized for this project yet
-In progress: index.html is now live-synced with Firestore (real-time, no file picking). User confirmed Firestore is working (sync status shows "Live") and imported starter data successfully. Next action for the user is copying index.html onto the OneDrive shared drive folder for other teachers to use.
-Branch: N/A
+Last commit: 8246098 — Revert live data to the proportionally-stretched T1/T2 mapping
+In progress: none (git status clean). Live Firestore data for Bookkeeping/Business Administration/Business & Finance is on the proportionally-stretched T1/T2 (two-teacher parallel track) mapping; the user is taking over manually from here to continue adjusting it.
+Branch: main
 
 ## What's next
 - [ ] Decide whether the Add/Edit Class dialog's duration field should auto-calculate from hours (÷30), matching the Hours-from-credits pattern — Chat/Claude Code
@@ -88,6 +88,12 @@ Browser tasks, desktop automation, file management.
 Use project-context-updater.html on Cowork-heavy days.
 
 ## Change log
+- 2026-07-28 — Revert live data to the proportionally-stretched T1/T2 mapping — Source: Claude Code
+- 2026-07-28 — Fix inconsistent per-course pacing: revert to plain hours/30 everywhere — Source: Claude Code
+- 2026-07-28 — Replace lab-time filler with proportionally-stretched T1/T2 courses — Source: Claude Code
+- 2026-07-28 — Remap Bookkeeping/BA/B&F as parallel T1 (accounting) + T2 (business) tracks — Source: Claude Code
+- 2026-07-28 — Switch program-map snapshots to dated per-program files — Source: Claude Code
+- 2026-07-28 — Initial commit: Program Schedule/Credit Chart app + program-map snapshots (git repo initialized, pushed to https://github.com/jtball85-png/Credit-Mapping-Chart-Tool) — Source: Claude Code
 - 2026-07-10 — Replaced shared-drive JSON file persistence (File System Access API) with Google Firestore live backend: real-time sync via onSnapshot listeners, Firestore-based class/program CRUD with writeBatch for atomic program rename/delete, "Import Starter Data" one-time seed button, removed IndexedDB handle-persistence and file-picker code entirely — Source: Claude Code
 - 2026-07-09 — Built interactive prototype in index.html: add/edit/delete class dialog, program filter, Manage Programs (rename/delete), seeded real Bookkeeping/Business Administration/Business & Finance program data from source PDF, week-range grey shading, fixed bar/column alignment bug, fixed row-height regression, added sticky/frozen header — Source: Claude Code
 - 2026-07-09 — Project initialized — Source: Claude Code
