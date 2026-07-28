@@ -1,7 +1,7 @@
 {
   "program": "Business Administration",
   "date": "2026-07-28",
-  "savedAt": "2026-07-28T22:30:00.737Z",
+  "savedAt": "2026-07-28T22:39:24.142Z",
   "classes": [
     {
       "name": "Computer & Internet Fundamentals (incl. Keyboarding)",
@@ -9,7 +9,7 @@
       "hours": 60,
       "hoursManual": false,
       "startWeek": 1,
-      "duration": 2
+      "duration": 3
     },
     {
       "name": "Accounting Principles (incl. Electronic Calculator)",
@@ -17,47 +17,47 @@
       "hours": 60,
       "hoursManual": false,
       "startWeek": 1,
-      "duration": 2
-    },
-    {
-      "name": "Accounting 1",
-      "credits": 1,
-      "hours": 30,
-      "hoursManual": false,
-      "startWeek": 3,
-      "duration": 1
+      "duration": 10
     },
     {
       "name": "Microsoft Outlook",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
-      "startWeek": 3,
-      "duration": 1
+      "startWeek": 4,
+      "duration": 2
     },
     {
       "name": "Microsoft Word",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
-      "startWeek": 4,
-      "duration": 1
+      "startWeek": 6,
+      "duration": 2
     },
     {
       "name": "Business Math",
       "credits": 2,
       "hours": 60,
       "hoursManual": false,
-      "startWeek": 5,
-      "duration": 2
+      "startWeek": 8,
+      "duration": 3
+    },
+    {
+      "name": "Accounting 1",
+      "credits": 1,
+      "hours": 30,
+      "hoursManual": false,
+      "startWeek": 11,
+      "duration": 5
     },
     {
       "name": "Communications (incl. MS/Google Suites & Cloud)",
       "credits": 3,
       "hours": 90,
       "hoursManual": false,
-      "startWeek": 7,
-      "duration": 3
+      "startWeek": 11,
+      "duration": 5
     },
     {
       "name": "HR",
@@ -73,22 +73,22 @@
       "hours": 60,
       "hoursManual": false,
       "startWeek": 17,
-      "duration": 2
+      "duration": 3
     },
     {
       "name": "Microsoft Excel",
       "credits": 4,
       "hours": 120,
       "hoursManual": false,
-      "startWeek": 19,
-      "duration": 4
+      "startWeek": 20,
+      "duration": 5
     },
     {
       "name": "Workforce Readiness",
       "credits": 1,
       "hours": 30,
       "hoursManual": false,
-      "startWeek": 23,
+      "startWeek": 25,
       "duration": 1
     },
     {
@@ -96,7 +96,7 @@
       "credits": 2,
       "hours": 60,
       "hoursManual": false,
-      "startWeek": 24,
+      "startWeek": 26,
       "duration": 2
     },
     {
@@ -104,8 +104,8 @@
       "credits": 2,
       "hours": 60,
       "hoursManual": false,
-      "startWeek": 26,
-      "duration": 2
+      "startWeek": 28,
+      "duration": 3
     }
   ]
 }
