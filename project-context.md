@@ -1,5 +1,5 @@
 # Project: Program Schedule/Credit Chart
-Last updated: 2026-07-28 by Claude Code (end of day)
+Last updated: 2026-07-29 by Claude Code (end of day)
 
 ## What this project is
 A visual scheduling tool for course programs across a 45-week calendar. Teachers add classes (name, credits, hours, start week, duration) and each class renders as a horizontal bar spanning the weeks it runs, laid out across columns 1-45. Multiple teachers will use it from a shared drive, with a dropdown to filter the view down to a single program.
@@ -38,8 +38,8 @@ Programs have Classes. Each Class has: name, credits, hours, start week (1-45), 
 Brand new project, no code written yet. Next step is building an interactive in-memory prototype (add rows, see bars render across the 1-45 week grid, filter by program) so the interaction can be validated before wiring up shared-drive file save/load.
 
 ## Where we left off
-Last commit: 8246098 — Revert live data to the proportionally-stretched T1/T2 mapping
-In progress: none (git status clean). Live Firestore data for Bookkeeping/Business Administration/Business & Finance is on the proportionally-stretched T1/T2 (two-teacher parallel track) mapping; the user is taking over manually from here to continue adjusting it.
+Last commit: faa1dcb — End of day 2026-07-28 — context and memory updated
+In progress: Program_Chart_Visuals.pdf regenerated from current live Firestore data (still the proportionally-stretched T1/T2 mapping) but not yet committed — user hasn't confirmed whether to commit this refresh.
 Branch: main
 
 ## What's next

@@ -20,6 +20,19 @@ Read automatically by /start-of-day. Updated automatically by /end-of-day.
 
 ## Sessions
 
+## Session — 2026-07-29
+
+**Focus:** User asked for printables for the three programs (Bookkeeping, Business Administration, Business & Finance) showing the current live mapping, same style as the `Program_Chart_Visuals.pdf` built the previous session.
+
+**Decisions made:**
+- Regenerated `Program_Chart_Visuals.pdf` from fresh live Firestore data rather than reusing the prior session's cached data, since the user had said they'd be manually adjusting the T1/T2 mapping — confirmed the live data was unchanged from the proportionally-stretched T1/T2 mapping session end state (no manual edits had been made yet).
+
+**Left unresolved:**
+- `Program_Chart_Visuals.pdf` was regenerated and copied into the project root, but the user did not confirm whether to commit this refresh to git before running end-of-day — it remains uncommitted (see Where we left off in project-context.md).
+
+**Files changed this session:**
+- Program_Chart_Visuals.pdf — regenerated from current live Firestore data (uncommitted).
+
 ## Session — 2026-07-28
 
 **Focus:** Started with opening the app locally to view it, then moved through several distinct threads: updating Bookkeeping/Business Administration/Business & Finance curriculum data from a new source PDF, confirming and redesigning the financial-aid credit-block mapping (12 credits per 15-week block), generating PDF reports, building a save/reload system for program schedules, putting the project on GitHub, and prototyping a two-teacher (T1 accounting / T2 business) parallel-track schedule mapping.
